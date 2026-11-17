@@ -9,8 +9,8 @@ The `specstream` MCP server connects Claude Code to SpecStream's live web Search
 
 ## Workflow
 
-1. **Quick web search.** Call `search_web` with `{"q": "<question>"}` for current facts or to check a few sources before running a full list. Cite the returned URLs and read dates.
-2. **Read pages or documents.** Call `read_pages` with `{"urls": ["<url>", ...]}` (up to 20 URLs per call) to extract main text from web pages, PDFs, Word files, or spreadsheets.
+1. **Quick web search.** Call `search_web` with `{"q": "<question>"}` for current facts or to check a few sources before running a full list. Tell the user the cost first and wait for a yes (see Ask first). Cite the returned URLs and read dates.
+2. **Read pages or documents.** Call `read_pages` with `{"urls": ["<url>", ...]}` (up to 20 URLs per call) to extract main text from web pages, PDFs, Word files, or spreadsheets. Tell the user the cost first and wait for a yes (see Ask first).
 3. **Structured lists (Deep Search).** When the user wants many rows matching conditions with per-field citations:
    - Call `compile` to parse the plain-language request and surface anything ambiguous or unsupported.
    - Call `quote_capacity_work` to get a quote for that exact request (quotes last 30 minutes).
@@ -27,6 +27,8 @@ The `specstream` MCP server connects Claude Code to SpecStream's live web Search
 
 Wait for an explicit yes before each action below. A yes for one item does not cover another.
 
+- Every `search_web` call: state the cost ($0.005 for up to 10 results, $0.001 on the fast tier).
+- Every `read_pages` call: state the number of pages and the cost ($0.0008 a page).
 - Every `authorize_capacity_work` call: state the column list and the quoted maximum cost in USD.
 - Every `start_research` call: state the chosen depth and price ($0.10, $0.30, or $1.00).
 - Any change to workspace state (saved schedules, destinations, webhooks, projects, or API keys): only perform these when the user asks for that change, and confirm any deletion first.
